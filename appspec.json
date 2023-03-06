@@ -1,63 +1,53 @@
 {
-  "settings": [
-    {
-      "id": "year",
-      "name": "The year.",
-      "description": "Insert description for the year setting setting",
-      "defaultValue": 2022,
-      "type": "INTEGER"
-    }
-  ],
+  "settings": [],
   "dependencies": {
     "R": [
       {
-        "name": "lubridate",
-        "version": "1.7.10"
-      },
-      {
-        "name": "move"
+        "name": "move2"
       }
     ]
   },
-  "createsArtifacts": true,
   "license": {
-    "key": "MIT"
+    "key": "GPL-3.0-or-later"
   },
   "language": "eng",
   "keywords": [
-    "example",
-    "template"
+    "Movebank",
+	"download",
+    "non-location data",
+	"acceleration",
+	"magnetometer",
+	"accessory measurements"
   ],
   "people": [
     {
-      "firstName": "Charles",
-      "middleInitials": null,
-      "lastName": "Darwin",
-      "email": "creator@example.com",
+"firstName": "Andrea",
+	  "middleInitials": null,
+      "lastName": "Kölzsch",
+      "email": "akoelzsch@ab.mpg.de",
       "roles": [
-        "author",
+		"author",
         "creator"
       ],
-      "orcid": null,
-      "affiliation": null,
-      "affiliationRor": null
+      "orcid": "0000-0003-0193-1563",
+      "affiliation": "Max-Planck-Institute of Animal Behavior",
+	  "affiliationRor": "https://ror.org/026stee22"
     }
   ],
   "funding": [
     {
-      "name": "funder name",
-      "comment": "grant for App"
+      "name": "North Carlolina Zoo"
     }
   ],
   "references": [
     {
-      "type": "IsDescribedBy",
-      "note": "Darwin, C. 1900. The creation. Journal XY. 1-2",
-      "url": "https://anylink.xyz"
+      "type": "Requires",
+      "note": "move2 R package",
+      "url": "https://bartk.gitlab.io/move2"
     }
   ],
   "documentation": {
-    "url": "https://github.com/yourAccount/my-app/README.md"
+    "url": "https://github.com/movestore/Movebank_NonLoc/blob/master/README.md"
   }
 }
 

@@ -100,6 +100,6 @@ rFunction = function(data,login,password,study,animals=NULL,select_sensors,time0
     names(result) <- make.names(names(result),allow_=FALSE) #most apps work with generalised names attributes, but have to think here...
   }
 
-  return(result)
+  return(result) #move2 object
   
 }
