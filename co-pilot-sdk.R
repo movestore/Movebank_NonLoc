@@ -3,7 +3,7 @@
 ##################
 ## Provided testing datasets in `./data/raw`: 
 ## for own data: file saved as a .rds containing a object of class MoveStack
-inputFileName = "./data/raw/input1_greygeese.rds" 
+inputFileName = "null.rds"
 
 ## optionally change the output file name
 unlink("./data/output/", recursive = TRUE) # delete "output" folder if it exists, to have a clean start for every run
@@ -23,7 +23,17 @@ outputFileName = "./data/output/output.rds"
 
 args <- list() # if your function has no arguments, this line still needs to be active
 # Add all your arguments of your r-function here
-args[["year"]] = 2014 
+library(dotenv)
+load_dot_env(file="akoelzsch.env")
+
+args[["login"]] = Sys.getenv("MOVEBANK_USERNAME")
+args[["password"]] = Sys.getenv("MOVEBANK_PASSWORD")
+args[["study"]] = 180156318 
+args[["animals"]] = c("49_Timo_M","53_Eva_F") #if NULL then select all
+args[["select_sensors"]] = c(7842954, 2365683)
+args[["time0"]] = "20180203000000000"
+args[["timeE"]] = "20180220000000000"
+
 
 ##############################
 ## source, setup & simulate ## leave as is!
@@ -41,4 +51,4 @@ Sys.setenv(
 
 # simulate running your app on MoveApps
 source("src/moveapps.R")
-simulateMoveAppsRun(args)
+simulateMoveAppsRun(args) #this needs an input file, not simply NULL object
