@@ -8,9 +8,14 @@ Github repository: *github.com/movestore/Movebank_NonLoc*
 Download non-location data from Movebank studies. These can be e.g. accessory measurements or acceleration data (Tipp: Add multiple Apps of this type to combine similar data of different Movebank studies that can be analysed jointly.
 
 ## Documentation
-TBD
+Using the new move2 R package, here the sf concept is used for quick download of non-location data from Movebank. Similar to the Movebank App, login and selection of a study and animals can be performed. Only non-location data types can be selected and downloaded, with the possibility to set start and/or end timestamps.
+
+The main function used here is movebank_download_study() from the R package move2. If not animals are selected in the second selection step, data of all animals of the study are downloaded. Note that the data set will be combined by animal if more than one sensor type has been selected. This might complicate further analysis of the data, but could also allow for more general outcomes.
+
+So far, it is not possible or recommended to include non-location data here.
 
 ### Input data
+none or
 non-location move2 object in Movebank format
 
 
@@ -21,17 +26,13 @@ non-location move2 object in Movebank format
 none.
 
 ### Settings 
-TBD
-*Please list and define all settings/parameters that the App requires to be set by the App user, if necessary including their unit.*
-
-*Example:* `Radius of resting site` (radius): Defined radius the animal has to stay in for a given duration of time for it to be considered resting site. Unit: `metres`.
+interactive: movebank credentials, study, animals, time range, sensor type
 
 ### Most common errors
-TBD
-*Please describe shortly what most common errors of the App can be, how they occur and best ways of solving them.*
+not yet available.
+
 
 ### Null or error handling
-TBD
-*Please indicate for each setting as well as the input data which behaviour the App is supposed to show in case of errors or NULL values/input. Please also add notes of possible errors that can happen if settings/parameters are improperly set and any other important information that you find the user should be aware of.*
+The move2 object can handle empty tables, so those should not lead to problems.
 
-*Example:* **Setting `radius`:** If no radius AND no duration are given, the input data set is returned with a warning. If no radius is given (NULL), but a duration is defined then a default radius of 1000m = 1km is set. 
+The column names timestamp, sensory_type and individual_local_identifier are required.
