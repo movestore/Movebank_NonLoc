@@ -62,7 +62,7 @@ rFunction = function(data,login,password,study,animals=NULL,select_sensors,time0
     sensors_by_animal <- lapply(sensors_by_animal, function(x) x[which(x %in% select_sensors)])
     
     #can only download one individual track, ok
-    result_list <- lapply(animals,function(animal) {
+    result_list <- lapply(animals, function(animal) {
       
       arguments["individual_local_identifier"] = animal
       logger.info(animal)
@@ -94,10 +94,9 @@ rFunction = function(data,login,password,study,animals=NULL,select_sensors,time0
       data_id
     })
 
-    result <- result_list[[1]]
-    if (length(result_list)>1) for (i in seq(along=result_list)[-1]) result <- rbind(result,result_list[[i]]) #this for-loop must be optimized somehow, not sure how that works with tibble, lists and move2..
-    #NULL can be added with rbind, as it disappears. no need to take out individuals without data
-    names(result) <- make.names(names(result),allow_=FALSE) #most apps work with generalised names attributes, but have to think here...
+    result <- mt_stack(result_list)
+    #note that one should not create generalised names here, as move2 objects require to have the attribute "individual_local_identifier"
+    
   }
 
   return(result) #move2 object

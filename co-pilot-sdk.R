@@ -28,11 +28,11 @@ load_dot_env(file="akoelzsch.env")
 
 args[["login"]] = Sys.getenv("MOVEBANK_USERNAME")
 args[["password"]] = Sys.getenv("MOVEBANK_PASSWORD")
-args[["study"]] = 180156318 
-args[["animals"]] = c("49_Timo_M","53_Eva_F") #if NULL then select all
-args[["select_sensors"]] = c(7842954, 2365683)
-args[["time0"]] = "20180203000000000"
-args[["timeE"]] = "20180220000000000"
+args[["study"]] = 			9589196 
+args[["animals"]] = c("CS007400_3101","CS007291_3023") #if NULL then select all
+args[["select_sensors"]] = c(2365683)
+#args[["time0"]] = "20220705000000000"
+#args[["timeE"]] = "20220715000000000"
 
 
 ##############################
