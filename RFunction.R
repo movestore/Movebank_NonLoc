@@ -64,7 +64,7 @@ rFunction = function(data,login,password,study,animals=NULL,select_sensors,time0
     #can only download one individual track, ok
     result_list <- lapply(animals, function(animal) {
       
-      arguments["individual_local_identifier"] = animal
+      arguments["individual_local_identifier"] = URLencode(animal,reserved=T) #animal
       logger.info(animal)
       
       sensors_animal <- sensors_by_animal[[which(names(sensors_by_animal)==animal)]]
