@@ -31,8 +31,9 @@ args[["password"]] = Sys.getenv("MOVEBANK_PASSWORD")
 args[["study"]] = 				25166516 
 args[["animals"]] = c("Alek + / PLG VT1367 (GPS4553, ECG3843)") #if NULL then select all
 args[["select_sensors"]] = c(2365683)
-#args[["time0"]] = "20220705000000000"
-#args[["timeE"]] = "20220715000000000"
+args[["handl_dupl"]] <- TRUE
+args[["time0"]] = "2015-07-05T00:00:00.000Z" #discuss with Clemens if this can be format yyyymmddhhmmsssss, then need to adapt RFunction.R
+args[["timeE"]] = "2015-07-15T00:00:00.000Z"
 
 
 ##############################

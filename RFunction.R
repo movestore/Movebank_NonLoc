@@ -1,11 +1,10 @@
 library('move2')
 
-## The parameter "data" is reserved for the data object passed on from the previous app
+## update to download all selected animals in one go.
+## discuss if can provide timestamps as yyyymmddhhmmsssss, adapt if yes
+## discuss how to provide sensor type table in cargo agent (or use API)
 
-## to display messages to the user in the log file of the App in MoveApps one can use the function from the logger.R file: 
-# logger.fatal(), logger.error(), logger.warn(), logger.info(), logger.debug(), logger.trace()
-
-rFunction = function(data,login,password,study,animals=NULL,select_sensors,time0=NULL,timeE=NULL) {
+rFunction = function(data,login,password,study,animals=NULL,select_sensors,handl_dupl=TRUE,time0=NULL,timeE=NULL) {
   
   movebank_store_credentials(login,password)
   
@@ -15,14 +14,16 @@ rFunction = function(data,login,password,study,animals=NULL,select_sensors,time0
 
   if (exists("time0") && !is.null(time0)) {
       logger.info(paste0("timestamp_start is set and will be used: ", time0))
-      arguments["timestamp_start"] = time0
+      arguments["timestamp_start"] = paste(substring(as.character(time0),c(1,6,9,12,15,18,21),c(4,7,10,13,16,19,23)),collapse="")
+      #arguments["timestamp_start"] = as.POSIXct(as.character(time0),format="%Y-%m-%dT%H:%M:%OSZ")
     } else {
       logger.info("timestamp_start not set.")
     }
   
   if (exists("timeE") && !is.null(timeE)) {
     logger.info(paste0("timestamp_end is set and will be used: ", timeE))
-    arguments["timestamp_end"] = timeE
+    arguments["timestamp_end"] = paste(substring(as.character(timeE),c(1,6,9,12,15,18,21),c(4,7,10,13,16,19,23)),collapse="")
+    #arguments["timestamp_end"] = as.POSIXct(as.character(timeE),format="%Y-%m-%dT%H:%M:%OSZ")
   } else {
     logger.info("timestamp_end not set.")
   }
@@ -82,15 +83,19 @@ rFunction = function(data,login,password,study,animals=NULL,select_sensors,time0
       }
       
       # possibility to remove duplicates if taken by the same sensor
-      if (is.null(data_id)==FALSE)
+      if (handl_dupl==TRUE)
       {
-        dupl <- which(duplicated(data.frame(mt_time(data_id),data_id$sensor_type_id))) #remove duplicates, even if this can likely never happen (can it?)
-        if (length(dupl)>0) 
+        if (!is.null(data_id)) #if there are any ata from the individual
         {
-          data_id <- data_id[-dupl,]
-          logger.info(paste(length(dupl),"duplicated measurements were removed from your dataset."))
+          dupl <- which(duplicated(data.frame(mt_time(data_id),data_id$sensor_type_id))) #remove duplicates, even if this can likely never happen (can it?)
+          if (length(dupl)>0) 
+          {
+            data_id <- data_id[-dupl,]
+            logger.info(paste(length(dupl),"duplicated measurements were removed from your dataset."))
+          }
         }
       }
+      
       data_id
     })
 
