@@ -1,29 +1,31 @@
 library('move2')
 
 ## update to download all selected animals in one go.
-## discuss if can provide timestamps as yyyymmddhhmmsssss, adapt if yes
+
 ## discuss how to provide sensor type table in cargo agent (or use API)
 
-rFunction = function(data,login,password,study,animals=NULL,select_sensors,handl_dupl=TRUE,time0=NULL,timeE=NULL) {
+rFunction = function(data,username,password,study,animals=NULL,select_sensors,duplicates_handling=TRUE,timestamp_start=NULL,timestamp_end=NULL) {
   
-  movebank_store_credentials(login,password)
+  movebank_store_credentials(username,password)
   
   arguments <- list()
   
   arguments[["study_id"]] <- study
 
-  if (exists("time0") && !is.null(time0)) {
-      logger.info(paste0("timestamp_start is set and will be used: ", time0))
-      arguments["timestamp_start"] = paste(substring(as.character(time0),c(1,6,9,12,15,18,21),c(4,7,10,13,16,19,23)),collapse="")
-      #arguments["timestamp_start"] = as.POSIXct(as.character(time0),format="%Y-%m-%dT%H:%M:%OSZ")
+  if (exists("timestamp_start") && !is.null(timestamp_start)) {
+      logger.info(paste0("timestamp_start is set and will be used: ", timestamp_start))
+      arguments["timestamp_start"] = timestamp_start
+      #arguments["timestamp_start"] = paste(substring(as.character(timestamp_start),c(1,6,9,12,15,18,21),c(4,7,10,13,16,19,23)),collapse="")
+      #arguments["timestamp_start"] = as.POSIXct(as.character(timestamp_start),format="%Y-%m-%dT%H:%M:%OSZ")
     } else {
       logger.info("timestamp_start not set.")
     }
   
-  if (exists("timeE") && !is.null(timeE)) {
-    logger.info(paste0("timestamp_end is set and will be used: ", timeE))
-    arguments["timestamp_end"] = paste(substring(as.character(timeE),c(1,6,9,12,15,18,21),c(4,7,10,13,16,19,23)),collapse="")
-    #arguments["timestamp_end"] = as.POSIXct(as.character(timeE),format="%Y-%m-%dT%H:%M:%OSZ")
+  if (exists("timestamp_end") && !is.null(timestamp_end)) {
+    logger.info(paste0("timestamp_end is set and will be used: ", timestamp_end))
+    arguments["timestamp_end"] = timestamp_end
+    #arguments["timestamp_end"] = paste(substring(as.character(timestamp_end),c(1,6,9,12,15,18,21),c(4,7,10,13,16,19,23)),collapse="")
+    #arguments["timestamp_end"] = as.POSIXct(as.character(timestamp_end),format="%Y-%m-%dT%H:%M:%OSZ")
   } else {
     logger.info("timestamp_end not set.")
   }
@@ -83,9 +85,9 @@ rFunction = function(data,login,password,study,animals=NULL,select_sensors,handl
       }
       
       # possibility to remove duplicates if taken by the same sensor
-      if (handl_dupl==TRUE)
+      if (duplicates_handling==TRUE)
       {
-        if (!is.null(data_id)) #if there are any ata from the individual
+        if (!is.null(data_id)) #if there are any data from the individual
         {
           dupl <- which(duplicated(data.frame(mt_time(data_id),data_id$sensor_type_id))) #remove duplicates, even if this can likely never happen (can it?)
           if (length(dupl)>0) 

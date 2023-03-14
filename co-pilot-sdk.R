@@ -26,14 +26,14 @@ args <- list() # if your function has no arguments, this line still needs to be 
 library(dotenv)
 load_dot_env(file="akoelzsch.env")
 
-args[["login"]] = Sys.getenv("MOVEBANK_USERNAME")
+args[["username"]] = Sys.getenv("MOVEBANK_USERNAME")
 args[["password"]] = Sys.getenv("MOVEBANK_PASSWORD")
 args[["study"]] = 				25166516 
 args[["animals"]] = c("Alek + / PLG VT1367 (GPS4553, ECG3843)") #if NULL then select all
 args[["select_sensors"]] = c(2365683)
-args[["handl_dupl"]] <- TRUE
-args[["time0"]] = "2015-07-05T00:00:00.000Z" #discuss with Clemens if this can be format yyyymmddhhmmsssss, then need to adapt RFunction.R
-args[["timeE"]] = "2015-07-15T00:00:00.000Z"
+args[["duplicates_handling"]] <- TRUE
+args[["timestamp_start"]] = "20150705000000000" 
+args[["timestamp_end"]] = "20150715000000000"
 
 
 ##############################
