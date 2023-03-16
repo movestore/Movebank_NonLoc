@@ -4,7 +4,7 @@ library('move2')
 
 ## discuss how to provide sensor type table in cargo agent (or use API)
 
-rFunction = function(data,username,password,study,animals=NULL,select_sensors,duplicates_handling=TRUE,timestamp_start=NULL,timestamp_end=NULL) {
+rFunction = function(data,username,password,config_version=NULL,study,animals=NULL,select_sensors,duplicates_handling=TRUE,timestamp_start=NULL,timestamp_end=NULL) {
   
   movebank_store_credentials(username,password)
   
