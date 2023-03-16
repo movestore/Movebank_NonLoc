@@ -13,25 +13,25 @@
   "language": "eng",
   "keywords": [
     "Movebank",
-	"download",
+	  "download",
     "non-location data",
-	"acceleration",
-	"magnetometer",
-	"accessory measurements"
+	  "acceleration",
+	  "magnetometer",
+	  "accessory measurements"
   ],
   "people": [
     {
-"firstName": "Andrea",
+    "firstName": "Andrea",
 	  "middleInitials": null,
       "lastName": "Kölzsch",
       "email": "akoelzsch@ab.mpg.de",
       "roles": [
-		"author",
+		    "author",
         "creator"
       ],
       "orcid": "0000-0003-0193-1563",
       "affiliation": "Max-Planck-Institute of Animal Behavior",
-	  "affiliationRor": "https://ror.org/026stee22"
+	    "affiliationRor": "https://ror.org/026stee22"
     },
 	{
       "firstName": "Bart",
