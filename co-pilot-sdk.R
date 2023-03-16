@@ -31,7 +31,7 @@ args[["password"]] = Sys.getenv("MOVEBANK_PASSWORD")
 args[["study"]] = 				25166516 
 args[["animals"]] = c("Alek + / PLG VT1367 (GPS4553, ECG3843)") #if NULL then select all
 args[["select_sensors"]] = c(2365683)
-args[["duplicates_handling"]] <- TRUE
+args[["handle_duplicates"]] <- TRUE
 args[["timestamp_start"]] = "20150705000000000" 
 args[["timestamp_end"]] = "20150715000000000"
 

@@ -4,7 +4,7 @@ library('move2')
 
 ## discuss how to provide sensor type table in cargo agent (or use API)
 
-rFunction = function(data,username,password,study,animals=NULL,select_sensors,duplicates_handling=TRUE,timestamp_start=NULL,timestamp_end=NULL) {
+rFunction = function(data,username,password,config_version=NULL,study,animals=NULL,select_sensors,handle_duplicates=TRUE,timestamp_start=NULL,timestamp_end=NULL) {
   
   movebank_store_credentials(username,password)
   
@@ -85,7 +85,7 @@ rFunction = function(data,username,password,study,animals=NULL,select_sensors,du
       }
       
       # possibility to remove duplicates if taken by the same sensor
-      if (duplicates_handling==TRUE)
+      if (handle_duplicates==TRUE)
       {
         if (!is.null(data_id)) #if there are any data from the individual
         {
