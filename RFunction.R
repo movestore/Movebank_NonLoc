@@ -1,4 +1,5 @@
 library('move2')
+library('keyring')
 
 ## update to download all selected animals in one go.
 
