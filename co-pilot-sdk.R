@@ -24,7 +24,7 @@ outputFileName = "./data/output/output.rds"
 args <- list() # if your function has no arguments, this line still needs to be active
 # Add all your arguments of your r-function here
 library(dotenv)
-load_dot_env(file="akoelzsch.env")
+load_dot_env(file="dev.env")
 
 args[["username"]] = Sys.getenv("MOVEBANK_USERNAME")
 args[["password"]] = Sys.getenv("MOVEBANK_PASSWORD")
