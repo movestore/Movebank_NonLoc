@@ -7,6 +7,7 @@ library('keyring')
 
 rFunction = function(data,username,password,config_version=NULL,study,animals=NULL,select_sensors,handle_duplicates=TRUE,timestamp_start=NULL,timestamp_end=NULL) {
   
+  options("keyring_backend"="env")
   movebank_store_credentials(username,password)
   
   arguments <- list()
