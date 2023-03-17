@@ -4,6 +4,9 @@
     "R": [
       {
         "name": "move2"
+      },
+	        {
+        "name": "keyring"
       }
     ]
   },
