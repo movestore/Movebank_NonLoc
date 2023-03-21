@@ -108,6 +108,12 @@ rFunction = function(data,username,password,config_version=NULL,study,animals=NU
     
   }
 
+  if (exists("data") && !is.null(data)) 
+  {
+    logger.info("Merging input and result together.")
+    result <- mt_stack(data,result) #this gives an error if attributes of same name have differing class
+  }
+  
   return(result) #move2 object
   
 }
