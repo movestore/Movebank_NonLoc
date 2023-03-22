@@ -103,7 +103,9 @@ rFunction = function(data,username,password,config_version=NULL,study,animals=NU
       data_id
     })
 
-    result <- mt_stack(result_list)
+    
+    result_list <- result_list[unlist(lapply(result_list, is.null)==FALSE)]  #remove NULL entries
+    if (length(results_list)>0) result <- mt_stack(result_list) else result <- NULL
     #note that one should not create generalised names here, as move2 objects require to have the attribute "individual_local_identifier"
     
   }

@@ -3,7 +3,7 @@
 ##################
 ## Provided testing datasets in `./data/raw`: 
 ## for own data: file saved as a .rds containing a object of class MoveStack
-inputFileName = "null.rds"
+inputFileName = "output_new.rds"
 
 ## optionally change the output file name
 unlink("./data/output/", recursive = TRUE) # delete "output" folder if it exists, to have a clean start for every run
@@ -28,12 +28,12 @@ load_dot_env(file="dev.env")
 
 args[["username"]] = Sys.getenv("MOVEBANK_USERNAME")
 args[["password"]] = Sys.getenv("MOVEBANK_PASSWORD")
-args[["study"]] = 				25166516 
-args[["animals"]] = c("Alek + / PLG VT1367 (GPS4553, ECG3843)") #if NULL then select all
+args[["study"]] = 				9589196 
+args[["animals"]] = c("CS007400_3101","CS007291_3023") #if NULL then select all
 args[["select_sensors"]] = c(2365683)
 args[["handle_duplicates"]] <- TRUE
-args[["timestamp_start"]] = "20150705000000000" 
-args[["timestamp_end"]] = "20150715000000000"
+args[["timestamp_start"]] = NULL #"20150705000000000" 
+args[["timestamp_end"]] = NULL #"20150715000000000"
 
 
 ##############################
