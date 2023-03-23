@@ -28,12 +28,12 @@ load_dot_env(file="dev.env")
 
 args[["username"]] = Sys.getenv("MOVEBANK_USERNAME")
 args[["password"]] = Sys.getenv("MOVEBANK_PASSWORD")
-args[["study"]] = 				9589196 
-args[["animals"]] = c("CS007400_3101","CS007291_3023") #if NULL then select all
-args[["select_sensors"]] = c(2365683)
+args[["study"]] = 				1784176162 
+args[["animals"]] = c("163114Z","163116Z") #if NULL then select all
+args[["select_sensors"]] = 7842954
 args[["handle_duplicates"]] <- TRUE
 args[["timestamp_start"]] = NULL #"20150705000000000" 
-args[["timestamp_end"]] = NULL #"20150715000000000"
+args[["timestamp_end"]] = NULL #"20220101000000000" #"20150715000000000"
 
 
 ##############################

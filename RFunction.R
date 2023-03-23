@@ -5,7 +5,7 @@ library('keyring')
 
 ## discuss how to provide sensor type table in cargo agent (or use API)
 
-rFunction = function(data,username,password,config_version=NULL,study,animals=NULL,select_sensors,handle_duplicates=TRUE,timestamp_start=NULL,timestamp_end=NULL) {
+rFunction = function(data=NULL,username,password,config_version=NULL,study,animals=NULL,select_sensors,handle_duplicates=TRUE,timestamp_start=NULL,timestamp_end=NULL) {
   
   options("keyring_backend"="env")
   movebank_store_credentials(username,password)
@@ -99,7 +99,7 @@ rFunction = function(data,username,password,config_version=NULL,study,animals=NU
           }
         }
       }
-      
+      if (!is.null(data_id)) logger.info(paste0(dim(data_id)[1]," non-location events were downloaded for the individual ", animal,".")) else logger.info(paste0("There were no data available for the specified settings for individual ",animal,"."))
       data_id
     })
 
@@ -112,8 +112,15 @@ rFunction = function(data,username,password,config_version=NULL,study,animals=NU
 
   if (exists("data") && !is.null(data)) 
   {
-    logger.info("Merging input and result together.")
-    result <- mt_stack(data,result) #this gives an error if attributes of same name have differing class
+    if (is.null(result)) 
+    {
+      result <- data
+      logger.info("No data downloaded, but input data returned.")
+    } else
+    {
+      logger.info("Merging input and result together.")
+      result <- mt_stack(data,result) #this gives an error if attributes of same name have differing class
+    }
   }
   
   return(result) #move2 object
