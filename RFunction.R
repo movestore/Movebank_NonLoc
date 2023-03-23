@@ -54,9 +54,9 @@ rFunction = function(data=NULL,username,password,config_version=NULL,study,anima
   {
     logger.info("The selected study does not contain any non-location sensor data. No data will be downloaded (NULL output) by this App.")
     result <- NULL
-  } else if (length(select_sensors)==0)
+  } else if (is.null(select_sensors) | length(select_sensors)==0)
   {
-    logger.info("You have deselected all available non-location sensors. No data will be downloaded (NULL output) by this App.")
+    logger.info("Either the selected study does not contain any non-location sensor data or you have deselected all available non-location sensors. No data will be downloaded (NULL output) by this App.")
     result <- NULL
   } else
   {
