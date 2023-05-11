@@ -9,7 +9,7 @@ source("src/io/rds.R")
 simulateMoveAppsRun <- function(args) {
     tryCatch(
     {
-        #Sys.setenv(tz="UTC") #talk about this line... should probably remove
+        Sys.setenv(tz="UTC")
 
         data <- readInput(sourceFile())
         if (!is.null(data)) {
