@@ -3,7 +3,7 @@
 ##################
 ## Provided testing datasets in `./data/raw`: 
 ## for own data: file saved as a .rds containing a object of class MoveStack
-inputFileName = "output_new.rds"
+inputFileName = "./data/raw/input1_greygeese.rds" 
 
 ## optionally change the output file name
 unlink("./data/output/", recursive = TRUE) # delete "output" folder if it exists, to have a clean start for every run
@@ -23,18 +23,7 @@ outputFileName = "./data/output/output.rds"
 
 args <- list() # if your function has no arguments, this line still needs to be active
 # Add all your arguments of your r-function here
-library(dotenv)
-load_dot_env(file="dev.env")
-
-args[["username"]] = Sys.getenv("MOVEBANK_USERNAME")
-args[["password"]] = Sys.getenv("MOVEBANK_PASSWORD")
-args[["study"]] = 				1784176162 
-args[["animals"]] = c("163114Z","163116Z") #if NULL then select all
-args[["select_sensors"]] = 7842954
-args[["handle_duplicates"]] <- TRUE
-args[["timestamp_start"]] = NULL #"20150705000000000" 
-args[["timestamp_end"]] = NULL #"20220101000000000" #"20150715000000000"
-
+args[["year"]] = 2014 
 
 ##############################
 ## source, setup & simulate ## leave as is!
@@ -52,4 +41,4 @@ Sys.setenv(
 
 # simulate running your app on MoveApps
 source("src/moveapps.R")
-simulateMoveAppsRun(args) #this needs an input file, not simply NULL object
+simulateMoveAppsRun(args)
