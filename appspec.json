@@ -1,65 +1,63 @@
 {
-  "settings": [],
+  "settings": [
+    {
+      "id": "year",
+      "name": "The year.",
+      "description": "Insert description for the year setting setting",
+      "defaultValue": 2022,
+      "type": "INTEGER"
+    }
+  ],
   "dependencies": {
     "R": [
       {
-        "name": "move2"
+        "name": "lubridate",
+        "version": "1.7.10"
       },
-	        {
-        "name": "keyring"
+      {
+        "name": "move"
       }
     ]
   },
+  "createsArtifacts": true,
   "license": {
-    "key": "GPL-3.0-or-later"
+    "key": "MIT"
   },
   "language": "eng",
   "keywords": [
-    "Movebank",
-    "download",
-    "non-location data",
-    "acceleration",
-    "magnetometer",
-    "accessory measurements"
+    "example",
+    "template"
   ],
   "people": [
     {
-      "firstName": "Andrea",
+      "firstName": "Charles",
       "middleInitials": null,
-      "lastName": "Kölzsch",
-      "email": "akoelzsch@ab.mpg.de",
+      "lastName": "Darwin",
+      "email": "creator@example.com",
       "roles": [
         "author",
         "creator"
       ],
-      "orcid": "0000-0003-0193-1563",
-      "affiliation": "Max-Planck-Institute of Animal Behavior",
-      "affiliationRor": "https://ror.org/026stee22"
-    },
-    {
-      "firstName": "Bart",
-      "middleInitials": null,
-      "lastName": "Kranstauber",
-      "email": "b.kranstauber@uva.nl",
-      "roles": [
-        "contributor",
-        "author"
-      ]
+      "orcid": null,
+      "affiliation": null,
+      "affiliationRor": null
     }
   ],
   "funding": [
     {
-      "name": "North Carolina Zoo"
+      "name": "funder name",
+      "comment": "grant for App"
     }
   ],
   "references": [
     {
-      "type": "Requires",
-      "note": "move2 R package",
-      "url": "https://bartk.gitlab.io/move2"
+      "type": "IsDescribedBy",
+      "note": "Darwin, C. 1900. The creation. Journal XY. 1-2",
+      "url": "https://anylink.xyz"
     }
   ],
   "documentation": {
-    "url": "https://github.com/movestore/Movebank_NonLoc/blob/master/README.md"
+    "url": "https://github.com/yourAccount/my-app/README.md"
   }
 }
+

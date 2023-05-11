@@ -1,38 +1,39 @@
-# Movebank Non-Location
+# Name of App *(Give your app a short and informative title. Please adhere to our convention of Title Case without hyphens (e.g. My New App))*
 
 MoveApps
 
-Github repository: *github.com/movestore/Movebank_NonLoc*
+Github repository: *github.com/yourAccount/Name-of-App* *(the link to the repository where the code of the app can be found must be provided)*
 
 ## Description
-Download non-location data from Movebank studies. These can be e.g. accessory measurements or acceleration data (Tip: Add multiple Apps of this type to combine similar data from different Movebank studies that can be analysed jointly.
+*Enter here the short description of the App that might also be used when filling out the description when submitting the App to Moveapps. This text is directly presented to Users that look through the list of Apps when compiling Workflows.*
 
 ## Documentation
-Using the new move2 R package, here the sf concept is used for quick download of non-location data from Movebank. Similar to the Movebank App, login and selection of a study and animals can be performed. Only non-location data types can be selected and downloaded, with the possibility to set start and/or end timestamps.
-
-The main function used here is movebank_download_study() from the R package move2. If no animals are selected in the second selection step, data from all animals in the study are downloaded. Note that the data set will be combined by animal if more than one sensor type has been selected. This might complicate further analysis of the data, but could also allow for more general outcomes.
-
-So far, it is not possible or recommended to include non-location data here.
+*Enter here a detailed description of your App. What is it intended to be used for. Which steps of analyses are performed and how. Please be explicit about any detail that is important for use and understanding of the App and its outcomes.*
 
 ### Input data
-none or
-non-location move2 object in Movebank format
+*Indicate which type of input data the App requires. Currently only R objects of class `MoveStack` can be used. This will be extend in the future.*
 
+*Example*: MoveStack in Movebank format
 
 ### Output data
-non-location move2 object in Movebank format
+*Indicate which type of output data the App produces to be passed on to subsequent apps. Currently only R objects of class `MoveStack` can be used. This will be extend in the future. In case the App does not pass on any data (e.g. a shiny visualization app), it can be also indicated here that no output is produced to be used in subsequent apps.*
+
+*Example:* MoveStack in Movebank format
 
 ### Artefacts
-none.
+*If the App creates artefacts (e.g. csv, pdf, jpeg, shapefiles, etc), please list them here and describe each.*
+
+*Example:* `rest_overview.csv`: csv-file with Table of all rest site properties
 
 ### Settings 
-interactive: movebank credentials, study, animals, time range, sensor type
+*Please list and define all settings/parameters that the App requires to be set by the App user, if necessary including their unit.*
+
+*Example:* `Radius of resting site` (radius): Defined radius the animal has to stay in for a given duration of time for it to be considered resting site. Unit: `metres`.
 
 ### Most common errors
-not yet available.
-
+*Please describe shortly what most common errors of the App can be, how they occur and best ways of solving them.*
 
 ### Null or error handling
-The move2 object can handle empty tables, so those should not lead to problems.
+*Please indicate for each setting as well as the input data which behaviour the App is supposed to show in case of errors or NULL values/input. Please also add notes of possible errors that can happen if settings/parameters are improperly set and any other important information that you find the user should be aware of.*
 
-The column names timestamp, sensory_type and individual_local_identifier are required.
+*Example:* **Setting `radius`:** If no radius AND no duration are given, the input data set is returned with a warning. If no radius is given (NULL), but a duration is defined then a default radius of 1000m = 1km is set. 
