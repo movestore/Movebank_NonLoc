@@ -4,3 +4,5 @@ renv/
 *.Rproj
 appspec.json
 tests/testthat/test_RFunction.R
+# backward compatibility
+co-pilot-sdk.R
