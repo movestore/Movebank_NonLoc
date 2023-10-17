@@ -1,11 +1,8 @@
 library('move2')
 library('keyring')
+library('lubridate')
 
-## update to download all selected animals in one go.
-
-## discuss how to provide sensor type table in cargo agent (or use API)
-
-rFunction = function(data=NULL,username,password,config_version=NULL,study,animals=NULL,select_sensors,handle_duplicates=TRUE,timestamp_start=NULL,timestamp_end=NULL) {
+rFunction = function(data=NULL, username,password,study,select_sensors,animals=NULL,timestamp_start=NULL,timestamp_end=NULL,duplicates_handling="first", ...) {
   
   options("keyring_backend"="env")
   movebank_store_credentials(username,password)
@@ -13,8 +10,26 @@ rFunction = function(data=NULL,username,password,config_version=NULL,study,anima
   arguments <- list()
   
   arguments[["study_id"]] <- study
+  
+  #sensor types
+  if (is.null(select_sensors))
+  {
+    logger.info("The selected study does not contain any non-location sensor data. No data will be downloaded (NULL output) by this App.")
+    result <- NULL
+  } else if (length(select_sensors)==0)
+  {
+    logger.info("Either the selected study does not contain any non-location sensor data or you have deselected all available non-location sensors. No data will be downloaded (NULL output) by this App.")
+    result <- NULL
+  } else #download if any sensor given
+  {
+    arguments[["sensor_type_id"]] <- select_sensors
+    
+    sensorInfo <- movebank_retrieve(entity_type="tag_type")
+    select_sensors_name <- sensorInfo$name[which(as.numeric(sensorInfo$id) %in% select_sensors)]
+    logger.info(paste("You have selected to download non-locations of these selected sensor types:",paste(select_sensors_name,collapse=", ")))
+    
 
-  if (exists("timestamp_start") && !is.null(timestamp_start)) {
+    if (exists("timestamp_start") && !is.null(timestamp_start)) {
       logger.info(paste0("timestamp_start is set and will be used: ", timestamp_start))
       arguments["timestamp_start"] = timestamp_start
       #arguments["timestamp_start"] = paste(substring(as.character(timestamp_start),c(1,6,9,12,15,18,21),c(4,7,10,13,16,19,23)),collapse="")
@@ -22,107 +37,78 @@ rFunction = function(data=NULL,username,password,config_version=NULL,study,anima
     } else {
       logger.info("timestamp_start not set.")
     }
-  
-  if (exists("timestamp_end") && !is.null(timestamp_end)) {
-    logger.info(paste0("timestamp_end is set and will be used: ", timestamp_end))
-    arguments["timestamp_end"] = timestamp_end
-    #arguments["timestamp_end"] = paste(substring(as.character(timestamp_end),c(1,6,9,12,15,18,21),c(4,7,10,13,16,19,23)),collapse="")
-    #arguments["timestamp_end"] = as.POSIXct(as.character(timestamp_end),format="%Y-%m-%dT%H:%M:%OSZ")
-  } else {
-    logger.info("timestamp_end not set.")
-  }
-
-  if (length(animals)==0)
-  {
-    logger.info("no animals set, using full study")
-    animals <- as.character(movebank_retrieve(entity_type = "individual", study_id =study)$local_identifier) #local_identifier not well named here...
-  }
-  
-  logger.info(paste(length(animals), "animals:", paste(animals,collapse=", ")))
-  
-  sensorinfo <- as.data.frame(movebank_retrieve("entity_type" = "tag_type"))
-  sensors <- unique(movebank_retrieve(entity_type="sensor", tag_study_id=study)$sensor_type_id)
-  sensors_nonloc <- sensors[sensors %in% as.numeric(sensorinfo[sensorinfo$is_location_sensor==FALSE,"id"])]
-  sensors_nonloc_names <- sensorinfo$name[as.numeric(sensorinfo$id) %in% sensors_nonloc]
-
-  #list with available sensors by animal
-  animals_list <- as.list(animals)
-  sensors_by_animal <- lapply(animals_list, function(x) unique(movebank_retrieve(entity_type="sensor", tag_study_id=study)$sensor_type_id,individual_local_identifier=x))
-  names(sensors_by_animal) <- animals_list
-  
-  if (is.null(sensors_nonloc))
-  {
-    logger.info("The selected study does not contain any non-location sensor data. No data will be downloaded (NULL output) by this App.")
-    result <- NULL
-  } else if (is.null(select_sensors) | length(select_sensors)==0)
-  {
-    logger.info("Either the selected study does not contain any non-location sensor data or you have deselected all available non-location sensors. No data will be downloaded (NULL output) by this App.")
-    result <- NULL
-  } else
-  {
-    select_sensors_names <- sensorinfo$name[which(as.numeric(sensorinfo$id) %in% select_sensors)]
-    logger.info(paste("Of all available non-location sensors in this study (",paste(sensors_nonloc_names,collapse=", "),") you have selected to download these selected sensor types:",paste(select_sensors_names,collapse=", ")))
-
-    #only selected sensors by animal
-    sensors_by_animal <- lapply(sensors_by_animal, function(x) x[which(x %in% select_sensors)])
     
-    #can only download one individual track, ok
-    result_list <- lapply(animals, function(animal) {
-      
-      arguments["individual_local_identifier"] = URLencode(animal,reserved=T) #animal
-      logger.info(animal)
-      
-      sensors_animal <- sensors_by_animal[[which(names(sensors_by_animal)==animal)]]
-
-      if (length(sensors_animal)==0)
-      {
-        logger.info("There are no data of the required sensor type for this animal.")
-        data_id <- NULL
-      } else 
-      {
-        arguments[["sensor_type_id"]] <- sensors_animal
-        data_id <- tryCatch(do.call(movebank_download_study, arguments), error = function(e){
-          logger.info(e)
-          return(NULL)}) #can return NULL if there are no data by this animal
-      }
-      
-      # possibility to remove duplicates if taken by the same sensor
-      if (handle_duplicates==TRUE)
-      {
-        if (!is.null(data_id)) #if there are any data from the individual
-        {
-          dupl <- which(duplicated(data.frame(mt_time(data_id),data_id$sensor_type_id))) #remove duplicates, even if this can likely never happen (can it?)
-          if (length(dupl)>0) 
-          {
-            data_id <- data_id[-dupl,]
-            logger.info(paste(length(dupl),"duplicated measurements were removed from your dataset."))
-          }
-        }
-      }
-      if (!is.null(data_id)) logger.info(paste0(dim(data_id)[1]," non-location events were downloaded for the individual ", animal,".")) else logger.info(paste0("There were no data available for the specified settings for individual ",animal,"."))
-      data_id
-    })
-
+    if (exists("timestamp_end") && !is.null(timestamp_end)) {
+      logger.info(paste0("timestamp_end is set and will be used: ", timestamp_end))
+      arguments["timestamp_end"] = timestamp_end
+      #arguments["timestamp_end"] = paste(substring(as.character(timestamp_end),c(1,6,9,12,15,18,21),c(4,7,10,13,16,19,23)),collapse="")
+      #arguments["timestamp_end"] = as.POSIXct(as.character(timestamp_end),format="%Y-%m-%dT%H:%M:%OSZ")
+    } else {
+      logger.info("timestamp_end not set.")
+    }
     
-    result_list <- result_list[unlist(lapply(result_list, is.null)==FALSE)]  #remove NULL entries
-    if (length(result_list)>0) result <- mt_stack(result_list) else result <- NULL
-    #note that one should not create generalised names here, as move2 objects require to have the attribute "individual_local_identifier"
-    
-  }
 
-  if (exists("data") && !is.null(data)) 
-  {
-    if (is.null(result)) 
+    if (length(animals)==0)
     {
-      result <- data
-      logger.info("No data downloaded, but input data returned.")
+      anims <- movebank_download_deployment(study)$individual_local_identifier
+      logger.info(paste("no animals set, using full study with the following all animals:",paste(as.character(anims),collapse=", ")))
+      # arguments[["individual_local_identifier"]] <- NULL
     } else
     {
-      logger.info("Merging input and result together.")
-      result <- mt_stack(data,result) #this gives an error if attributes of same name have differing class
+      logger.info(paste("selected to download",length(animals), "animals:", paste(as.character(animals),collapse=", ")))
+      arguments[["individual_local_identifier"]] <- as.character(animals)
     }
+    
+    #download
+    locs <- do.call(movebank_download_study,arguments)
+    
+    # quality check: cleaved, time ordered, non-emtpy, non-duplicated
+    if(!mt_is_track_id_cleaved(locs))
+    {
+      logger.info("Your data set was not grouped by individual/track. We regroup it for you.")
+      locs <- locs |> dplyr::arrange(mt_track_id(locs))
+    }
+    
+    if (!mt_is_time_ordered(locs))
+    {
+      logger.info("Your data is not time ordered (within the individual/track groups). We reorder the measurements for you.")
+      locs <- locs |> dplyr::arrange(mt_track_id(locs),mt_time(locs))
+    }
+    
+    if(!mt_has_no_empty_points(locs))
+    {
+      logger.info("Your data included empty points. We remove them for you.")
+      locs <- dplyr::filter(locs, !sf::st_is_empty(locs))
+    }
+    
+    # rename track_id column to always combination of individual+tag so it is consistent and informative across studies. Used same naming as in "mt_read()"
+    # suggestion form Bart: maybe better use "animalName (dep_id:358594)" because it could happen that the same indiv gets tagged with the same tag in 2 different years. If using "indv_tag", tracks could get merged together that are actually different deployments
+    # ToDo: decide on column name e.g. "individual_name_deployment_id" and renaming e.g. "indivName (deploy_id:084728)"
+    locs <- locs |> mutate_track_data(individual_name_deployment_id = paste0(mt_track_data(locs)$individual_local_identifier ," (deploy_id:",mt_track_data(locs)$deployment_id,")")) # "deploy_id" or some other abbreviation that makes sense
+    idcolumn <- mt_track_id_column(locs) # need to get track id column before changing it
+    locs <- mt_as_event_attribute(locs,"individual_name_deployment_id") ## bug: this function turns the track data table into a data.frame. Bart is looking into it. But this should not cause any errors downstream.
+    locs <- mt_set_track_id(locs, "individual_name_deployment_id")
+    locs <- mt_as_track_attribute(locs,idcolumn)
+    
+    # remove duplicates without user interaction, start with select most-info row, then last (or first)
+    if (!mt_has_unique_location_time_records(locs))
+    {
+      n_dupl <- length(which(duplicated(paste(mt_track_id(locs),mt_time(locs)))))
+      logger.info(paste("Your data has",n_dupl, "duplicated location-time records. We removed here those with less info and then select the first if still duplicated."))
+      locs <- mt_filter_unique(locs,criterion="subsets")
+      locs <- mt_filter_unique(locs,criterion=duplicates_handling)
+      
+      logger.info(paste("Your data set contained",n_dupl,"duplicated locations."))
+      if (n_dupl>0) logger.info(paste("The duplicated locations were removed according to selection for most information if true subsets of the attributes or by selecting the",duplicates_handling,"location each (according to your selected setting)."))
+    }
+    
+    #make names
+    names(locs) <- make.names(names(locs),allow_=TRUE)
+    mt_track_id(locs) <- make.names(mt_track_id(locs),allow_=TRUE)
+    
+    # combine with other input data (move2!)
+    if (!is.null(data)) result <- mt_stack(data,locs,.track_combine="rename") else result <- locs
+    # mt_stack(...,track_combine="rename") #check if only renamed at duplication; read about and test track_id_repair
   }
-  
-  return(result) #move2 object
-  
+  return(result)
 }
