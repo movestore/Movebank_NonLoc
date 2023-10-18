@@ -75,11 +75,12 @@ rFunction = function(data=NULL, username,password,study,select_sensors,animals=N
       locs <- locs |> dplyr::arrange(mt_track_id(locs),mt_time(locs))
     }
     
-    if(!mt_has_no_empty_points(locs))
-    {
-      logger.info("Your data included empty points. We remove them for you.")
-      locs <- dplyr::filter(locs, !sf::st_is_empty(locs))
-    }
+    #nonloc points are defined empty, so dont do this test (correct, Anne?)
+    #if(!mt_has_no_empty_points(locs))
+    #{
+    #  logger.info("Your data included empty points. We remove them for you.")
+    #  locs <- dplyr::filter(locs, !sf::st_is_empty(locs))
+    #}
     
     # rename track_id column to always combination of individual+tag so it is consistent and informative across studies. Used same naming as in "mt_read()"
     # suggestion form Bart: maybe better use "animalName (dep_id:358594)" because it could happen that the same indiv gets tagged with the same tag in 2 different years. If using "indv_tag", tracks could get merged together that are actually different deployments
