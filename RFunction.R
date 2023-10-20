@@ -1,8 +1,9 @@
 library('move2')
 library('keyring')
 library('lubridate')
+library("dplyr")
 
-rFunction = function(data=NULL, username,password,study,select_sensors,animals=NULL,timestamp_start=NULL,timestamp_end=NULL,duplicates_handling="first", ...) {
+rFunction = function(data=NULL, username,password,study,select_sensors,animals=NULL,timestamp_start=NULL,timestamp_end=NULL, ...) {
   
   options("keyring_backend"="env")
   movebank_store_credentials(username,password)
@@ -75,7 +76,7 @@ rFunction = function(data=NULL, username,password,study,select_sensors,animals=N
       locs <- locs |> dplyr::arrange(mt_track_id(locs),mt_time(locs))
     }
     
-    #nonloc points are defined empty, so dont do this test (correct, Anne?)
+    #nonloc points are defined empty, so dont do this test (correct, Anne?) --> correct 
     #if(!mt_has_no_empty_points(locs))
     #{
     #  logger.info("Your data included empty points. We remove them for you.")
@@ -87,20 +88,20 @@ rFunction = function(data=NULL, username,password,study,select_sensors,animals=N
     # ToDo: decide on column name e.g. "individual_name_deployment_id" and renaming e.g. "indivName (deploy_id:084728)"
     locs <- locs |> mutate_track_data(individual_name_deployment_id = paste0(mt_track_data(locs)$individual_local_identifier ," (deploy_id:",mt_track_data(locs)$deployment_id,")")) # "deploy_id" or some other abbreviation that makes sense
     idcolumn <- mt_track_id_column(locs) # need to get track id column before changing it
-    locs <- mt_as_event_attribute(locs,"individual_name_deployment_id") ## bug: this function turns the track data table into a data.frame. Bart is looking into it. But this should not cause any errors downstream.
+    locs <- mt_as_event_attribute(locs,"individual_name_deployment_id")
     locs <- mt_set_track_id(locs, "individual_name_deployment_id")
-    locs <- mt_as_track_attribute(locs,idcolumn)
+    locs <- mt_as_track_attribute(locs,all_of(idcolumn)) # when changing the track_id column, the previous one stays in the event table, but gets removed from track table (which makes sense), but putting it back as in this case it will always work
     
-    # remove duplicates without user interaction, start with select most-info row, then last (or first)
+    # remove duplicates without user interaction, start with select most-info row
     if (!mt_has_unique_location_time_records(locs))
     {
       n_dupl <- length(which(duplicated(paste(mt_track_id(locs),mt_time(locs)))))
       logger.info(paste("Your data has",n_dupl, "duplicated location-time records. We removed here those with less info and then select the first if still duplicated."))
-      locs <- mt_filter_unique(locs,criterion="subsets")
-      locs <- mt_filter_unique(locs,criterion=duplicates_handling)
-      
-      logger.info(paste("Your data set contained",n_dupl,"duplicated locations."))
-      if (n_dupl>0) logger.info(paste("The duplicated locations were removed according to selection for most information if true subsets of the attributes or by selecting the",duplicates_handling,"location each (according to your selected setting)."))
+      ## this piece of code keeps the duplicated entry with least number of columns with NA values
+      locs <- locs %>% rowwise() %>%
+        mutate(n_na = sum(is.na(cur_data()))) %>%
+        arrange(n_na) %>%
+        mt_filter_unique(criterion='first') # this always needs to be "first" because the duplicates get ordered according to the number of columns with NA. 
     }
     
     #make names
