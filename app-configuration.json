@@ -5,6 +5,5 @@
     "select_sensors": [7842954],
     "animals": ["163114Z","163116Z"],
     "timestamp_start": null,
-    "timestamp_end": null,
-    "duplicates_handling": "first"
+    "timestamp_end": null
 }
