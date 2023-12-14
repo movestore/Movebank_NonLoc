@@ -5,14 +5,12 @@ MoveApps
 Github repository: *github.com/movestore/Movebank_NonLoc*
 
 ## Description
-Download non-location data from Movebank studies. These can be e.g. accessory measurements or acceleration data (Tip: Add multiple Apps of this type to combine similar data from different Movebank studies that can be analysed jointly.
+Download non-location data from Movebank studies. These can be e.g. accessory measurements or acceleration data (Tip: Add multiple Apps of this type to combine similar data from different Movebank studies that can be analysed jointly.)
 
 ## Documentation
-Using the new move2 R package, here the sf concept is used for quick download of non-location data from Movebank. Similar to the Movebank App, login and selection of a study and animals can be performed. Only non-location data types can be selected and downloaded, with the possibility to set start and/or end timestamps.
+Using the new move2 R package, here the sf concept is used for quick download of non-location data from Movebank. Similar to the Movebank Location App, login and selection of a study and animals can be performed. Only non-location data types can be selected and downloaded, with the possibility to set start and/or end timestamps.
 
 The main function used here is movebank_download_study() from the R package move2. If no animals are selected in the second selection step, data from all animals in the study are downloaded. Note that the data set will be combined by animal if more than one sensor type has been selected. This might complicate further analysis of the data, but could also allow for more general outcomes.
-
-So far, it is not possible or recommended to include non-location data here.
 
 ### Input data
 none or
