@@ -100,7 +100,7 @@ rFunction = function(data=NULL, username,password,study,select_sensors,animals=N
       ## this piece of code keeps the duplicated entry with least number of columns with NA values
       locs <- locs %>%
         mutate(n_na = rowSums(is.na(pick(everything())))) %>%
-        arrange(n_na) %>%
+        arrange(mt_track_id(.), mt_time(.),n_na) %>%
         mt_filter_unique(criterion='first') # this always needs to be "first" because the duplicates get ordered according to the number of columns with NA. 
     }
     
