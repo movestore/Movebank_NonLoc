@@ -3,6 +3,8 @@ library('keyring')
 library('lubridate')
 library("dplyr")
 
+## ToDo: find correct way of doing this: names(new1) <- make.names(names(new1),allow_=TRUE)
+
 rFunction = function(data=NULL, username,password,study,select_sensors,animals=NULL,timestamp_start=NULL,timestamp_end=NULL, ...) {
   
   options("keyring_backend"="env")
@@ -105,7 +107,7 @@ rFunction = function(data=NULL, username,password,study,select_sensors,animals=N
     }
     
     #make names
-    names(locs) <- make.names(names(locs),allow_=TRUE)
+    # names(locs) <- make.names(names(locs),allow_=TRUE)
     mt_track_id(locs) <- make.names(mt_track_id(locs),allow_=TRUE)
     
     # combine with other input data (move2!)
