@@ -1,9 +1,4 @@
 {
-    "username": "secret",
-    "password": "secret",
-    "study": 		1784176162,
-    "select_sensors": [7842954],
-    "animals": ["163114Z","163116Z"],
-    "timestamp_start": null,
-    "timestamp_end": null
+    "sdk": "MoveApps R SDK",
+    "year": 2014
 }
